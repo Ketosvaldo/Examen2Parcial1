@@ -6,7 +6,8 @@ class Game extends Component {
         this.state = {
             number: "",
             message: "",
-            random: generateRandomNumber(100)
+            random: generateRandomNumber(100),
+            intentos: [],
         }
     }
 
@@ -26,7 +27,8 @@ class Game extends Component {
     handleOnClick = () => {
         const number = parseInt(this.state.number);
         const random = parseInt(this.state.random);
-        const text = calculateText(number, random);
+        this.state.intentos.push(number)
+        const text = calculateText(number, random, this.state.intentos.length);
         this.setState({
             message: text,
         })
@@ -45,6 +47,7 @@ class Game extends Component {
                 <br/>
                 <button onClick={this.handleOnClick} className="botoon">Probar</button>
                 <p className={(this.state.message) && 'resultado'}>{this.state.message }</p>
+                <p>{this.state.intentos + ", "}</p>
             </div>
         );
     }
@@ -56,20 +59,20 @@ function generateRandomNumber(max, min = 1){
     return Math.floor(Math.random() * (max-min) + min);
 }
 
-function calculateText(number, random){
+function calculateText(number, random, intentos){
     if(number === random){
-        return "Felicidades, has acertado"
+        return "Felicidades, has acertado. Lo lograste en " + intentos + " intentos";
     }
     else if((number - random) <= 3 && (number - random) > 0){
-        return "Un poco mas hacia abajo"
+        return "Un poco mas hacia abajo";
     }
     else if((random - number) <= 3 && (random - number) > 0){
-        return "Un poco mas hacia arriba"
+        return "Un poco mas hacia arriba";
     }
     else if(number < random){
-        return "Mas hacia arriba"
+        return "Mas hacia arriba";
     }
     else if(number > random){
-        return "Mas hacia abajo"
+        return "Mas hacia abajo";
     }
 }
